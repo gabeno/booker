@@ -28,5 +28,8 @@ func main() {
 	fmt.Println("Please enter number of desired tickets: ")
 	fmt.Scan(&userTickets)
 
+	remainingTickets = conferenceTickets - userTickets
+
 	fmt.Printf("Thank you %v %v for booking %v tickets. We will contact you at your supplied email address %v", firstName, lastName, userTickets, email)
+	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 }

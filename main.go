@@ -7,8 +7,8 @@ import (
 
 func main() {
 	conferenceName := "Go Conference"
-	const conferenceTickets = 50
-	remainingTickets := 50
+	const conferenceTickets uint = 50
+	var remainingTickets uint = 50
 	var bookings []string
 
 	fmt.Printf("Welcome to %v booking application\n", conferenceName)
@@ -19,7 +19,7 @@ func main() {
 		var firstName string
 		var lastName string
 		var email string
-		var userTickets int
+		var userTickets uint
 
 		fmt.Println("Please enter your first name: ")
 		fmt.Scan(&firstName)
@@ -33,18 +33,28 @@ func main() {
 		fmt.Println("Please enter number of desired tickets: ")
 		fmt.Scan(&userTickets)
 
-		remainingTickets = conferenceTickets - userTickets
-		bookings = append(bookings, firstName+" "+lastName)
+		if userTickets <= remainingTickets {
+			remainingTickets = conferenceTickets - userTickets
+			bookings = append(bookings, firstName+" "+lastName)
 
-		fmt.Printf("Thank you %v %v for booking %v tickets. We will contact you at your supplied email address %v\n", firstName, lastName, userTickets, email)
-		fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+			fmt.Printf("Thank you %v %v for booking %v tickets. We will contact you at your supplied email address %v\n", firstName, lastName, userTickets, email)
+			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
-		firstNames := []string{}
-		for _, booking := range bookings {
-			var names = strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
+			firstNames := []string{}
+			for _, booking := range bookings {
+				var names = strings.Fields(booking)
+				firstNames = append(firstNames, names[0])
+			}
+
+			fmt.Printf("Bookings: %v\n", firstNames)
+
+			if remainingTickets == 0 {
+				fmt.Println("The conference is booked out. Try again next year.")
+				break
+			}
+		} else {
+			fmt.Printf("We only have %v tickets remaining, so you can not book %v tickets", remainingTickets, userTickets)
+			continue
 		}
-
-		fmt.Printf("Bookings: %v\n", firstNames)
 	}
 }

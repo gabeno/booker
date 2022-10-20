@@ -3,6 +3,7 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -19,6 +20,8 @@ type UserData struct {
 	numberOfTickets uint
 }
 
+var wg sync.WaitGroup // wait for goroutine to finish
+
 func main() {
 
 	greetUsers()
@@ -29,6 +32,8 @@ func main() {
 
 		if isValidName && isValidEmail && isValidTicketCount {
 			bookTicket(firstName, lastName, email, userTickets)
+
+			wg.Add(1) // set number of goroutines to wait for
 			go sendTicket(userTickets, firstName, lastName, email)
 
 			firstNames := getFirstNames()
@@ -48,9 +53,9 @@ func main() {
 			if !isValidTicketCount {
 				fmt.Println("number of tickets entered is invalid")
 			}
-			continue
 		}
 	}
+	wg.Wait() // block until WaitGroup counter is 0
 }
 
 func greetUsers() {
@@ -111,4 +116,5 @@ func sendTicket(userTickets uint, firstName string, lastName string, email strin
 	fmt.Println("######")
 	fmt.Printf("Sending ticket:\n %v \nto email address %v\n", ticket, email)
 	fmt.Println("######")
+	wg.Done() // decrement WaitGroup counter by 1, called by goroutine to indicate that it is finished
 }
